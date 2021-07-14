@@ -1,0 +1,356 @@
+---
+title: "Ejercicios"
+author: "Delsy"
+date: "13/7/2021"
+output: html_document
+---
+
+# Ejercicios
+## Parte 1
+Cargar las variables almacenadas en el siguiente archivo [Rdata](https://goo.gl/uDzU8v)
+
+**1. Calcula los valores numéricos aproximados de **
+
+a) $\frac{0.3 \cdot 0.15}{0.3 \cdot 0.15 + 0.2 \cdot 0.8 + 0.5 \cdot 0.12}$
+
+```{r}
+((0.3*0.15)/((0.3*0.15)+(0.2*0.8)+(0.5*0.12)))
+```
+b) $\frac{5^6}{6!} e^{-5}$
+
+```{r}
+((5^6)/(factorial(6)))*(exp(-5))
+```
+c) $\begin{pmatrix} 20 \\ 7 \end{pmatrix} 0.4^7  0.6^{13}$
+
+```{r}
+(factorial(20)/(factorial(7)*factorial(13))) *(0.4^7)*(0.6^13)
+```
+**2. Realizar la siguiente suma**
+
+a) $1+2+3+...+1000$
+
+```{r}
+sum(1:1000)
+```
+b) $1+2+4+8+16+...+1024$
+
+```{r}
+((2^11)-1)/(2-1)
+```
+**3. El vector  `grupo` representa el grupo al que pertenece una serie de alumnos**
+
+a) ¿Cuántos elementos tiene?
+
+```{r}
+vector <- grupo
+length(vector)
+```
+b) ¿En qué posiciones del vector está la letra "A"?
+
+```{r}
+which(vector == "A")
+```
+**4. El vector `nota` representa la nota de un examen de los alumnos que están en los grupos del vector `grupo`.**
+
+a) ¿Cuanto suman todas las notas?
+
+```{r}
+nota
+sum(nota)
+```
+b) ¿Cual es la media aritmética de todas las notas?
+
+```{r}
+mean(nota)
+```
+c) ¿En qué posiciones están las notas mayores de *7.0*?
+
+```{r}
+which(nota > 7.0)
+```
+d) Visualiza las notas ordenadas de mayor a menor.
+
+```{r}
+sort(nota, decreasing = TRUE, na.last = TRUE, )
+```
+e) ¿En qué posición está la nota máxima?
+
+```{r}
+which(nota == max(nota))
+```
+**5. A partir de los vectores `grupo` y `nota` definidos.**
+
+a) Suma las notas de los 10 primeros alumnos del vector.
+
+```{r}
+a <- grupo
+b <- nota
+sum(b[1:10])
+```
+b) ¿Cuántos alumnos hay del grupo *C*?
+
+```{r}
+a[a == "C" ]
+length(a[a == "C"])
+```
+c) ¿Cuántos alumnos han aprobado?
+
+```{r}
+b[b > 5 ]
+length(b[b > 5 ])
+```
+d) ¿Cuántos alumnos del grupo *B* han aprobado?
+
+```{r}
+a[ a == "B" & b > 5 ] 
+length(a[ a == "B" & b > 5 ])
+```
+e) ¿Qué porcentaje de alumnos del grupo *C* han aprobado?
+
+```{r}
+a[a == "C" & b > 5]
+a[a == "C" ]
+(length(a[a == "C" & b > 5])/length(a[a == "C" ]))*100
+```
+f) ¿De qué grupos son la máxima y mínima notas de toda la muestra?
+
+```{r}
+a[b == max(b)] 
+a[b == min(b)]
+```
+g) Nota media de los alumnos de grupo *A* y *B*, juntos, considerando sólo a los que han aprobado.
+
+```{r}
+b[a == c("A", "B") & b > 5]
+mean(b[a == c("A", "B") & b > 5])
+```
+**6. Calcula el percentil 66 de las notas de todos los alumnos, y también de los alumnos del grupo C.**
+
+```{r}
+quantile(b, 0.66)
+quantile(a == "C", 0.66)
+```
+**7. Un alumno tiene una nota de 4.9. ¿Qué porcentaje, del total de alumnos, tiene una nota menor o igual que la suya? ¿Y qué porcentaje tiene una nota mayor o igual que la suya?**
+
+```{r}
+b[b <= 4.9]
+b[b >= 4.9]
+length(b)
+(length(b[b <= 4.9])/length(b))*100
+(length(b[b >= 4.9])/length(b))*100
+```
+**8. Realiza el gráfico de diagramas de caja de las notas de cada grupo, para poder comparar el nivel de cada uno de ellos.**
+
+```{r}
+df <- data.frame(grupo, nota)
+boxplot(b ~ a, data = df)
+```
+**9. Si la variable `conc` recoge la concentración de plomo (en ppm) en el aire de cierta zona durante un día completo**
+
+a) ¿Cuál ha sido la concentración máxima?
+
+```{r}
+conc
+max(conc)
+```
+b) ¿En cuántos de los muestreos se ha superado la concentración de 40.0 ppm?
+
+```{r}
+conc
+conc[conc > 40]
+length(conc[conc > 40])
+```
+c) ¿Cuál ha sido la concentración media del día?
+
+```{r}
+conc
+mean(conc)
+```
+d) ¿Cuáles fueron las 10 mediciones más bajas del día?
+
+```{r}
+conc
+orden <- sort(conc, decreasing = FALSE, na.last = TRUE, )
+orden[1:10]
+```
+e) Si la primera medida fue a las 00:00. ¿A qué hora del día se alcanzó la concentración máxima?
+
+```{r}
+length(conc)
+hora <- 24/length(conc)
+max(conc)
+which(conc == max(conc))
+142 * hora
+```
+## Parte 2
+
+**1. Graficar los puntos $(1,1),(2,4),(3,6),(4,8),(5,25),(6,36),(7,49),(8,61),(9,81),(10,100)$ en un plano utilizando RStudio.**
+
+```{r}
+x <- c(1,2,3,4,5,6,7,8,9,10)
+y <- c(1,4,6,8,25,36,49,61,81,100)
+plot(x,y)
+```
+**2. Ingresar la matriz A en RStudio**
+$A = \begin{pmatrix} 1 & 2 & 3 \\ 2 & 4 & 6 \\ 3 & 6 & 9 \\ 4 & 8 & 12  \end{pmatrix}$
+
+```{r}
+vector_1 <- c(1,2,3,4,2,4,6,8,3,6,9,12)
+matrix(vector_1, nrow = 4, ncol = 3)
+
+```
+**3. Ingresar la matriz identidad de tamaño 3**
+$I = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1  \end{pmatrix}$
+
+```{r}
+vector_2 <- c(1,0,0,0,1,0,0,1,0)
+matrix(vector_2, nrow = 3, ncol = 3)
+```
+**4. Crea una función que cree una matriz nula ingresando las dimensiones**
+
+```{r}
+vector_3 <- c(0,0,0,0,0,0,0,0,0)
+matrix(vector_3, nrow = 3, ncol = 3)
+```
+**5. Modificar la matriz `diag(4)`, para que se parezca a la matriz B**
+$B = \begin{pmatrix} 0 & 0 & 0 & 0 \\ 0 & 2 & 0 & 0 \\ 0 & 0 & 3 & 0 \\ 0 & 0 & 0 & 4  \end{pmatrix}$
+
+```{r}
+matriz_1 <- diag(4)
+matriz_1[1,1] <- 0
+matriz_1[2,2] <- 2
+matriz_1[3,3] <- 3
+matriz_1[4,4] <- 4
+matriz_1
+```
+**6. Obtener la matriz transpuesta de A (ejercicio 2)**
+
+```{r}
+t(A)
+```
+**7. Realizar las siguientes operaciones $A + B$, $A - B$, $3B$ y $AB$**
+
+$A = \begin{pmatrix} 1 & 2 & 3 & 4 \\ 2 & 4 & 6 & 8 \\ 3 & 6 & 9 & 12 \\ 4 & 8 & 12 & 16 \end{pmatrix}$
+$B = \begin{pmatrix} 0 & 0 & 0 & 0 \\ 0 & 2 & 0 & 0 \\ 0 & 0 & 3 & 0 \\ 0 & 0 & 0 & 4  \end{pmatrix}$
+
+```{r}
+vector_1 <- c(1,2,3,4,2,4,6,8,3,6,9,12,4,8,12,16)
+A <- matrix(vector_1, nrow = 4, ncol = 4)
+B <- matriz_1
+A + B
+A - B
+3*B
+A*B
+```
+**8. Crea una función para calcular $P^6$**
+$P = \begin{pmatrix} 1 & 2 & 3 \\ -2 & 4 & -2 \\ 1 & 0 & 1  \end{pmatrix}$
+
+```{r}
+P <- c(1,-2,1,2,4,0,3,-2,1)
+m_2 <- matrix(P, nrow = 3, ncol = 3)
+d <- 6
+m_2d <- function(d){
+  P <- c(1,-2,1,2,4,0,3,-2,1)
+  m_2 <- matrix(P, nrow = 3, ncol = 3)
+  resultado <- m_2^d
+  return(resultado)
+}
+m_2d(6)
+```
+**9. Resolver el sistema de ecuaciones**
+$3x - y + z  = -1\\9x - 2y + z = -9\\3x + y - 2z = -9$
+
+```{r}
+a <- rbind(c(3,-1,1),
+          c(9,-2,1),
+          c(3,1,-2))
+b <- c(-1,-9,-9)
+solve(a,b)
+```
+**10. Utilizando la ayuda de R, investigue para qué sirven las funciones `eigen()` y `det()`**
+
+```{r}
+??eigen()
+??det()
+```
+
+**11. Considerando las matrices**
+
+$$
+
+B= \begin{pmatrix} 
+1 & 2 & 3 & 4 & 5 \\
+2 & 4 & 6 & 8 & 10 \\
+3 & 6 & 9 & 12 & 15 \\
+4 & 8 & 12 & 16 & 20 \\
+5 & 10 & 15 & 20 & 25 \\
+6 & 12 & 18 & 24 & 30 \\
+7 & 14 & 21 & 28 & 35 \\
+8 & 16 & 24 & 32 & 40 \\
+9 & 18 & 27 & 36 & 45 \\
+10 & 20 & 30 & 40 & 50
+\end{pmatrix}
+
+A = \begin{pmatrix}
+  0 & 1 & 0 & 1 & 0 \\
+  1 & 0 & 1 & 0 & 1 \\
+  0 & 1 & 0 & 1 & 0 \\
+  0 & 1 & 0 & 0 & 1 \\
+  1 & 0 & 1 & 1 & 0 \\
+\end{pmatrix}
+
+$$
+
+**12. Considere**
+$\hat\beta = (X^t \cdot X)^{-1} \cdot X^t \cdot Y$
+
+Determine la matriz $\hat\beta$
+
+```{r}
+vector_x <- c(1,1,1,1,1,1,-1,0,1,2)
+x <- matrix(vector_x, nrow = 5, ncol = 2)
+vector_x <- c(1,1,1,1,1,1)
+x <- matrix(vector_x, nrow = 5, ncol = 1)
+vector_y <- c(0,0,1,1,3)
+y <- matrix(vector_y, nrow = 5, ncol = 1)
+y/x
+
+```
+**13. Corre el siguiente código para cargar los vectores `year` y `co2`** en memoria
+```{r eval=FALSE}
+data(co2)
+means = aggregate(co2, FUN=mean)
+year = as.vector(time(means))
+co2 = as.vector(means)
+```
+- El vector `co2` contiene medidas de $CO_2$ en la atmósfera, en unidades de *ppm*, durante el periodo 1959-1997. El vector `year` contiene sus años correspondientes.
+- Calcular un vector de diferencias de $CO_2$ entre años consecutivos, que sería:
+  - $CO_2$ en 1960 menos $CO_2$  en 1959
+  - $CO_2$ en 1961 menos $CO_2$  en 1960
+  - y así sucesivamente...
+- Crear un **plot** con lineas y puntos mostrando las diferencias consecutivas de $CO_2$ en función del tiempo (1960, 1961, etc...), en **negrita**
+- La diferencia de concentración de $CO_2$ entre 2020 y 2019 fue igual a 2.64. Agregar un punto rojo representando esa diferencia al plot ya creado (usar una forma diferente, como `pch=4`)
+
+```{r eval=FALSE}
+co2
+year
+co2[year == 1960] - co2[year == 1959]
+dif_co2 <- c()
+for (x in 1:length(year)) {
+  resultado <- co2[x + 1] - co2[x]
+  dif_co2 <- c(dif_co2, resultado)
+}
+dif_co2
+plot(year,dif_co2, type = "b")
+plot(year,dif_co2, type = "b",pch=4 )
+```
+**14. **
+
+- Lee el archivo `rainfall.csv` como un `data.frame`
+- Calcula e imprime un vector con los nombres de las estaciones donde al menos uno de los meses tiene una precipitación superior a 180mm.
+
+```{r}
+library(tidyverse)
+getwd()
+```
