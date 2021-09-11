@@ -1,0 +1,183 @@
+---
+title: "Índices-Bio"
+author: "Delsy"
+date: "14/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(sf)
+library(tmap)
+library(rcartocolor)
+library(raster)
+library(dplyr)
+library(RColorBrewer)
+library(tidyverse)
+```
+
+## 2.3. Variables climáticas
+### 2.3.1 Precipitación
+
+```{r}
+# Listar datos de precipitación
+getwd()
+setwd("C:/Users/USUARIO/OneDrive/Documentos/BIOGEOGRAFÍA/CURSO_QGIS_B19/3eraClase")
+getwd()
+list_img <- list.files("3eraClase/Data/wc2.1_2.5m_prec_2014-2015/", full.names = TRUE, pattern = "*.tif")
+
+# Lectura de un raster
+PrecJan2014 <-  raster(list_img[1])
+## tiene proyección geográfica 
+
+# Identificar el SRC y propiedades de la imagen
+projection(PrecJan2014)
+extent(PrecJan2014)
+
+# Filtramos Lima
+prov <- st_read("3eraClase/Materiales/Provincias.gpkg") # plot(st_geometry(prov), axes = T)
+st_crs(prov)$epsg # podemos ver su EPSG , sistema coordenada geográfica 
+
+names(prov) # ver las cabeceras o campos (esto lo hacemos para filtrar) , columnas 
+view(prov)
+Chincheros <- prov[prov$PROVINCIA == "CHINCHEROS",] # La necesitamos para cortar nuestro área de estudio. 
+
+Chincheros <- st_transform(Chincheros, projection(PrecJan2014)) # transformamos, por siaca, ya que tanto vector como raster                               # podrían tener crs diferente si es asi no podríamos realizar geoprocesamientos.
+                                                                          
+# Cortar con crop: Ya que tenemos el raster y el poligono para el área, esto para reducir el procesamiento
+PLJ2014 <- PrecJan2014 %>% crop(Chincheros, snap = 'out')
+# plot(PLJ2010, axes = T)
+# plot(Lima, add = T)
+
+pz1 <- tm_shape(PLJ2014) + tm_raster(style = "cont", palette = "PuBu", title = "precipitación [mm]") + 
+  tm_shape(Chincheros) + tm_borders(lwd = 2) + # tmaptools::palette_explorer()
+  tm_layout(main.title = "Precipitación \nEnero del 2014", bg.color = "lightblue", scale = 1,
+            legend.show = TRUE, legend.outside = TRUE, legend.outside.position = "right") +
+  tm_text("PROVINCIA", size = 0.5) +
+  tm_compass(position = c("RIGHT", "TOP"), size = 2.5) + 
+  tm_scale_bar(position = c(0.05, 0.03))
+pz1
+  
+```
+
+### 2.3.2 Temperatura Máxima
+
+```{r}
+# Listar datos de tmax
+getwd()
+list_img <- list.files("3eraClase/Data/wc2.1_2.5m_tmax_2014-2015/", full.names = TRUE, pattern = "*.tif")
+
+# Lectura de un raster
+TmaxJan2014 <-  raster(list_img[1])
+
+# Identificar el SRC y propiedades de la imagen
+projection(TmaxJan2014)
+extent(TmaxJan2014)
+
+# Filtramos Lima
+prov <- st_read("3eraClase/Materiales/Provincias.gpkg") # plot(st_geometry(prov), axes = T)
+st_crs(prov)$epsg # podemos ver su EPSG
+
+names(prov) # ver las cabeceras o campos (esto lo hacemos para filtrar)
+Chincheros <- prov[prov$PROVINCIA == "CHINCHEROS",] # La necesitamos para cortar nuestro área de estudio. 
+
+Chincheros <- st_transform(Chincheros, projection(TmaxJan2014)) # transformamos, por siaca, ya que tanto vector como raster                               # podrían tener crs diferente si es asi no podríamos realizar geoprocesamientos.
+                                                                          
+# Cortar con crop: Ya que tenemos el raster y el poligono para el área, esto para reducir el procesamiento
+TXJ2014 <- TmaxJan2014 %>% crop(Chincheros, snap = 'out')
+# plot(PLJ2010, axes = T)
+# plot(Lima, add = T)
+
+
+pz1 <- tm_shape(TXJ2014) + tm_raster(style = "cont", palette = "YlOrRd", title = "TempMax [°C]") + 
+  tm_shape(Chincheros) + tm_borders(lwd = 2) + # tmaptools::palette_explorer()
+  tm_layout(main.title = "Temperatura Máxima \nEnero del 2014", bg.color = "lightblue", scale = 1,
+            legend.show = TRUE, legend.outside = TRUE, legend.outside.position = "right") +
+  tm_text("PROVINCIA", size = 0.5) +
+  tm_compass(position = c("RIGHT", "TOP"), size = 2.5) + 
+  tm_scale_bar(position = c(0.05, 0.03))
+pz1
+```
+
+### 2.3.3 Temperatura Mínima
+
+```{r}
+# Listar datos de tmin
+list_img <- list.files("3eraClase/Data/wc2.1_2.5m_tmin_2014-2015/", full.names = TRUE, pattern = "*.tif")
+
+# Lectura de un raster
+TminJan2014 <-  raster(list_img[1])
+
+# Identificar el SRC y propiedades de la imagen
+projection(TminJan2014)
+extent(TminJan2014)
+
+# Filtramos Lima
+prov <- st_read("3eraClase/Materiales/Provincias.gpkg") # plot(st_geometry(prov), axes = T)
+st_crs(prov)$epsg # podemos ver su EPSG
+
+names(prov) # ver las cabeceras o campos (esto lo hacemos para filtrar)
+Chincheros <- prov[prov$PROVINCIA == "CHINCHEROS",] # La necesitamos para cortar nuestro área de estudio. 
+
+Chincheros <- st_transform(Chincheros, projection(TminJan2014)) # transformamos, por siaca, ya que tanto vector como raster                               # podrían tener crs diferente si es asi no podríamos realizar geoprocesamientos.
+                                                                          
+# Cortar con crop: Ya que tenemos el raster y el poligono para el área, esto para reducir el procesamiento
+TMIJ2014 <- TminJan2014 %>% crop(Chincheros, snap = 'out')
+# plot(PLJ2010, axes = T)
+# plot(Lima, add = T)
+
+
+pz1 <- tm_shape(TMIJ2014) + tm_raster(style = "cont", palette = "RdPu", title = "TempMin [°C]") + 
+  tm_shape(Chincheros) + tm_borders(lwd = 2) + # tmaptools::palette_explorer()
+  tm_layout(main.title = "Temperatura Mínima \nEnero del 2014", bg.color = "lightblue", scale = 1,
+            legend.show = TRUE, legend.outside = TRUE, legend.outside.position = "right") +
+  tm_text("PROVINCIA", size = 0.5) +
+  tm_compass(position = c("RIGHT", "TOP"), size = 2.5) + 
+  tm_scale_bar(position = c(0.05, 0.03))
+pz1
+```
+
+### 2.3.3 Temperatura Media
+
+```{r}
+# Listar datos de tmean
+
+# Filtramos Lima
+prov <- st_read("3eraClase/Materiales/Provincias.gpkg") # plot(st_geometry(prov), axes = T)
+st_crs(prov)$epsg # podemos ver su EPSG
+
+names(prov) # ver las cabeceras o campos (esto lo hacemos para filtrar)
+Chincheros <- prov[prov$PROVINCIA == "CHINCHEROS",] # La necesitamos para cortar nuestro área de estudio. 
+
+Chincheros <- st_transform(Chincheros, projection(TminJan2014)) # transformamos, por siaca, ya que tanto vector como raster                               # podrían tener crs diferente si es asi no podríamos realizar geoprocesamientos.
+                                                                          
+# Cortar con crop: Ya que tenemos el raster y el poligono para el área, esto para reducir el procesamiento
+TMNJ2014 <- (TMIJ2014 + TXJ2014)/2
+# plot(PLJ2010, axes = T)
+# plot(Lima, add = T)
+
+pz1 <- tm_shape(TMNJ2014) + tm_raster(style = "cont", palette = "YlGn", title = "TempMean [°C]") + 
+  tm_shape(Chincheros) + tm_borders(lwd = 2) + # tmaptools::palette_explorer()
+  tm_layout(main.title = "Temperatura Media \nEnero del 2014", bg.color = "lightblue", scale = 1,
+            legend.show = TRUE, legend.outside = TRUE, legend.outside.position = "right") +
+  tm_text("PROVINCIA", size = 0.5) +
+  tm_compass(position = c("RIGHT", "TOP"), size = 2.5) + 
+  tm_scale_bar(position = c(0.05, 0.03))
+pz1
+```
+
+## 2.3.4 Guardado de un 1 año
+
+```{r}
+# Listar datos de tmin
+list_img <- list.files("3eraClase/Data/wc2.1_2.5m_tmin_2014-2015/", full.names = TRUE, pattern = "*.tif")[1:12]
+param <- c('tmin', 'tmax', 'prec')
+rt <- raster(list_img[1])
+
+
+# Area de cortado (crop)
+prov <- st_read("3eraClase/Materiales/Provincias.gpkg") # plot(st_geometry(prov), axes = T)
+Chincheros <- prov[prov$PROVINCIA == "CHINCHEROS",] # La necesitamos para cortar nuestro área de estudio. 
+Chincheros <- st_transform(Chincheros, projection(rt))
+list_rast <- list(Chincheros)
+plot(prov)
+```
